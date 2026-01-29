@@ -24,8 +24,12 @@ void read_random_word_from_file(FILE* file, long offsett, char* buffer){
 }
 
 void read_word_from_user(string buffer, int len){
-    fgets(buffer, len + 1, stdin);
-    buffer[WORD_LENGTH] = '\0';
+    do{
+        if (!fgets(buffer, len, stdin)){
+            return;
+        }
+        buffer[strcspn(buffer, "\n")] = '\0';
+    }while(buffer[0] == '\0');
 }
 
 void check_word(string userWord, string correctWord, ScanWordResults results, int len){
@@ -92,7 +96,12 @@ int main(){
     long wordOffset = get_offsett_marking_random_word(fileSize);
 
     char* buffer = malloc(RECORD_OF_WORD_LENGTH * sizeof(char));
+    clock_t t;
+    t = clock();
     read_random_word_from_file(file, wordOffset, buffer);
+    t = clock() - t;
+    double timeTaken = ((double) t * 1000000) / CLOCKS_PER_SEC;
+    printf("Time taken fetching file: %lf\n", timeTaken);
 
     char* userGuess = malloc(RECORD_OF_WORD_LENGTH * sizeof(char));
     int tries = 0;
@@ -112,7 +121,12 @@ int main(){
             printf("You win the game!\n");
             break;
         }
+        int c;
+        while (c != '\n' && c != EOF){
+            c = getchar();
+        }
         tries++;
+        
     }
     
 
