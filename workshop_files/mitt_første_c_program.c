@@ -39,7 +39,7 @@ int main(){
     }
     
 
-    while (*numbers != '\0'){
+    while (*numbers != '\0'){   
         printf("%d\n", *numbers);
         numbers++;
     }

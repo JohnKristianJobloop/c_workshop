@@ -24,12 +24,8 @@ void read_random_word_from_file(FILE* file, long offsett, char* buffer){
 }
 
 void read_word_from_user(string buffer, int len){
-    do{
-        if (!fgets(buffer, len, stdin)){
-            return;
-        }
-        buffer[strcspn(buffer, "\n")] = '\0';
-    }while(buffer[0] == '\0');
+    fgets(buffer, len + 1, stdin);
+    buffer[WORD_LENGTH] = '\0';
 }
 
 void check_word(string userWord, string correctWord, ScanWordResults results, int len){
