@@ -3,6 +3,7 @@ using WordleDotNet.Services;
 
 Console.WriteLine("Welcome to WordleDotNet....!");
 
+var stopWatch = Stopwatch.StartNew();
 long cpu_us =
     (long)(Process.GetCurrentProcess()
         .TotalProcessorTime.TotalMilliseconds * 1000);
@@ -10,7 +11,9 @@ var word = await WordListService.FetchRandomWord("wl.txt");
 cpu_us =
     (long)(Process.GetCurrentProcess()
         .TotalProcessorTime.TotalMilliseconds * 1000) - cpu_us;
-Console.WriteLine($"elapsed: {cpu_us}");
+stopWatch.Stop();
+Console.WriteLine($"elapsed cpu time: {cpu_us}");
+Console.WriteLine($"elapsed wall time: {stopWatch.Elapsed.Microseconds}");
 int tries = 0;
 do
 {

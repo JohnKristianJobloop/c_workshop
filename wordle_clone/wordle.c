@@ -1,3 +1,4 @@
+#define _POSIX_C_SOURCE 199309L
 #include <stdlib.h>
 #include <time.h>
 #include "wordle.h"
@@ -97,12 +98,17 @@ int main(){
 
     char* buffer = malloc(RECORD_OF_WORD_LENGTH * sizeof(char));
     clock_t t;
+    struct timespec ts;
+    struct timespec ts_after;
+    clock_gettime(CLOCK_MONOTONIC_RAW, &ts);
     t = clock();
     read_random_word_from_file(file, wordOffset, buffer);
     t = clock() - t;
+    clock_gettime(CLOCK_MONOTONIC_RAW, &ts_after);
     double timeTaken = ((double) t * 1000000) / CLOCKS_PER_SEC;
-    printf("Time taken fetching file: %lf\n", timeTaken);
-
+    __uint64_t us = (((__uint64_t)ts_after.tv_sec*1000000) + ((__uint64_t)ts_after.tv_nsec / 1000)) - (((__uint64_t)ts.tv_sec * 1000000) + ((__uint64_t)ts.tv_nsec / 1000));
+    printf("Cpu Time taken fetching file: %lf\n", timeTaken);
+    printf("Wall time taken fetching file: %ld\n", us);
     char* userGuess = malloc(RECORD_OF_WORD_LENGTH * sizeof(char));
     int tries = 0;
     ScanWordResults results;
@@ -129,7 +135,7 @@ int main(){
         
     }
     
-
+    fclose(file);
     free(buffer);
     free(userGuess);
     return 0;
